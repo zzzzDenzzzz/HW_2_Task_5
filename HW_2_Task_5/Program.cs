@@ -17,18 +17,61 @@ namespace HW_2_Task_5
         {
             Console.Write("Введите выражение: ");
             string line = Console.ReadLine().Replace(" ", "");
-            int res = 0;
-            int count = 0;
+            List<int> numbers = new List<int> { };
+            List<char> operations = new List<char> { };
+            if (line[0] == '-')
+            {
+                numbers.Add(0);
+            }
+            int num = 0;
             for (int i = 0; i < line.Length; i++)
             {
                 if (line[i] >= '0' && line[i] <= '9')
                 {
-                    res = res * 10 + line[i] - '0';
-                    count++;
+                    while (i < line.Length && line[i] >= '0' && line[i] <= '9')
+                    {
+                        num = num * 10 + int.Parse(line[i].ToString());
+                        i++;
+                    }
+                    numbers.Add(num);
+                    num = 0;
+                    i--;
+                }
+                else if (line[i] == '+' || line[i] == '-')
+                {
+                    operations.Add(line[i]);
                 }
             }
-            line = line.Remove(0, count);
-            Console.WriteLine($"Результат: {line}");
+            int result = 0;
+            bool flag = false;
+            while (operations.Count != 0)
+            {
+                int n1 = numbers[0];
+                char op = operations[0];
+                if (op == '+' && flag == true)
+                {
+                    result += n1;
+                }
+                else if (op == '-' && flag == true)
+                {
+                    result -= n1;
+                }
+                if (!flag)
+                {
+                    result += numbers[0];
+                }
+                if (operations.Count != 0)
+                {
+                    if (flag)
+                    {
+                        operations.RemoveAt(0);
+                    }
+                    numbers.RemoveAt(0);
+                    flag = true;
+                }
+            }
+            
+            Console.WriteLine($"{line} = {result}");
         }
     }
 }
